@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SWE Probeklausur – Interaktive Lernversion</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #637083;
+      --line: #d7dde6;
+      --accent: #244b73;
+      --accent-2: #eff5fb;
+      --ok: #1d7f4e;
+      --warn: #b36b00;
+      --bad: #a62626;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.45;
+    }
+
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--line);
+      padding: 18px 24px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin: 0 0 4px 0;
+      color: var(--accent);
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .score-box {
+      min-width: 260px;
+      background: var(--accent-2);
+      border: 1px solid #c7d8ea;
+      border-radius: 10px;
+      padding: 12px;
+    }
+
+    .score-main {
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--accent);
+    }
+
+    .progress {
+      height: 10px;
+      background: #dce6f1;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress > div {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width .25s ease;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 24px 40px;
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      gap: 22px;
+    }
+
+    nav {
+      position: sticky;
+      top: 98px;
+      align-self: start;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    nav a {
+      display: block;
+      color: var(--text);
+      text-decoration: none;
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+
+    nav a:hover, nav a.active {
+      background: var(--accent-2);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 20px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      color: var(--accent);
+    }
+
+    h3 {
+      margin: 20px 0 10px;
+      font-size: 17px;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 14px;
+    }
+
+    .question {
+      border-top: 1px solid var(--line);
+      padding-top: 16px;
+      margin-top: 16px;
+    }
+
+    .question:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .question-title {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .points {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 400;
+    }
+
+    textarea, input[type="text"], select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 9px 10px;
+      font: inherit;
+      background: #fff;
+      resize: vertical;
+    }
+
+    textarea {
+      min-height: 86px;
+    }
+
+    .small-input {
+      min-width: 90px;
+    }
+
+    .choices {
+      display: grid;
+      gap: 8px;
+      margin: 8px 0 10px;
+    }
+
+    label.choice {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    label.choice:hover {
+      background: #fafcff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 8px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #eef3f8;
+      text-align: left;
+      color: #26384f;
+      font-size: 14px;
+    }
+
+    td input, td textarea, td select {
+      border: 0;
+      border-radius: 0;
+      padding: 4px;
+      min-height: 34px;
+      background: transparent;
+    }
+
+    td textarea {
+      min-height: 46px;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    button {
+      border: 1px solid var(--accent);
+      background: var(--accent);
+      color: #fff;
+      border-radius: 8px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    button.secondary {
+      background: #fff;
+      color: var(--accent);
+    }
+
+    button.warning {
+      border-color: var(--warn);
+      background: var(--warn);
+    }
+
+    button:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .feedback {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .feedback.ok {
+      display: block;
+      background: #e9f7ef;
+      border: 1px solid #b9e1c9;
+      color: var(--ok);
+    }
+
+    .feedback.mid {
+      display: block;
+      background: #fff5e6;
+      border: 1px solid #ffd79a;
+      color: var(--warn);
+    }
+
+    .feedback.bad {
+      display: block;
+      background: #fdecec;
+      border: 1px solid #f1b8b8;
+      color: var(--bad);
+    }
+
+    .solution {
+      margin-top: 10px;
+      padding: 12px;
+      background: #f5f7fa;
+      border: 1px dashed var(--line);
+      border-radius: 8px;
+      display: none;
+      white-space: pre-wrap;
+    }
+
+    .collapsed-wrap {
+      display: block;
+    }
+
+    .collapsed .collapsed-wrap {
+      display: none;
+    }
+
+    .table-status {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    code, pre {
+      font-family: Consolas, Monaco, monospace;
+    }
+
+    pre {
+      background: #101827;
+      color: #e9eef5;
+      padding: 14px;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-size: 13px;
+    }
+
+    .summary-card {
+      background: #f9fbfd;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+
+    @media (max-width: 840px) {
+      .header-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      main {
+        grid-template-columns: 1fr;
+      }
+      nav {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-row">
+      <div>
+        <h1>SWE Probeklausur – Interaktive Lernversion</h1>
+        <p class="sub">Punktezählung, tolerante Texteingaben, erweiterbare Tabellen und einklappbare Antwortbereiche.</p>
+      </div>
+      <div class="score-box" aria-live="polite">
+        <div class="score-main"><span id="scoreNow">0</span> / <span id="scoreMax">0</span> Punkte</div>
+        <div class="sub"><span id="scorePercent">0</span>% erreicht · <span id="answeredCount">0</span> bewertet</div>
+        <div class="progress"><div id="scoreBar"></div></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <nav>
+      <a href="#a1">Aufgabe 1</a>
+      <a href="#a2">Aufgabe 2</a>
+      <a href="#a3">Aufgabe 3</a>
+      <a href="#a4">Aufgabe 4</a>
+      <a href="#auswertung">Auswertung</a>
+    </nav>
+
+    <div class="content">
+      <section id="a1">
+        <h2>Aufgabe 1 – Code-Qualität in Python</h2>
+        <p class="meta">Bewertung: Jede korrekte Tabellenzeile zählt. Reihenfolge ist egal. Kleine Schreibfehler werden toleriert.</p>
+
+        <pre>import logging
+import datetime, json
+from pathlib import Path
+class library_member:
+    def HasReachedLimit(self):
+        if self.borrowed_count >= 5: return True
+        return False
+
+def calculate_fees(loanList):
+    penalty = 0
+    for loan in loanList:
+        if loan.is_active == False:
+            continue
+
+max_loans = 20
+Default_Fee = 2.50</pre>
+
+        <div class="question table-question" data-id="pep8-table" data-points="20">
+          <div class="question-title">PEP-8-Verstöße eintragen <span class="points">(20 Punkte)</span></div>
+          <div class="collapsed-wrap">
+            <table data-table="pep8">
+              <thead>
+                <tr>
+                  <th style="width: 18%">Zeile</th>
+                  <th style="width: 18%">Regelcode</th>
+                  <th>Beschreibung</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="z.B. 2"></td>
+                  <td><input type="text" placeholder="z.B. E401"></td>
+                  <td><textarea placeholder="kurze Beschreibung"></textarea></td>
+                </tr>
+                <tr>
+                  <td><input type="text"></td>
+                  <td><input type="text"></td>
+                  <td><textarea></textarea></td>
+                </tr>
+                <tr>
+                  <td><input type="text"></td>
+                  <td><input type="text"></td>
+                  <td><textarea></textarea></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="button-row">
+            <button class="secondary" onclick="addTableRow(this)">Weitere Zeile hinzufügen</button>
+            <button class="secondary" onclick="toggleTable(this)">Tabelle einklappen</button>
+            <button onclick="checkTableQuestion(this)">Bewerten</button>
+            <button class="secondary" onclick="toggleSolution(this)">Lösung anzeigen</button>
+          </div>
+          <div class="table-status"></div>
+          <div class="feedback"></div>
+          <div class="solution">Akzeptierte Verstöße u.a.:
+1 F401
+2 E401
+2 F401
+3 F401
+class library_member / Zeile 4-6 N801
+HasReachedLimit N802
+if ...: return E701
+RegisterLoan N802
+newTotal N806
+loanList N803
+penalty F841
+== False E712
+type(...) == ... E721
+== None E711
+max_loans N816
+Default_Fee N816</div>
+        </div>
+      </section>
+
+      <section id="a2">
+        <h2>Aufgabe 2 – Type Hints</h2>
+
+        <div class="question table-question" data-id="typehints-table" data-points="4">
+          <div class="question-title">2a) Fehlende Type Hints identifizieren <span class="points">(4 Punkte)</span></div>
+          <div class="collapsed-wrap">
+            <table data-table="typehints">
+              <thead>
+                <tr>
+                  <th>Stelle</th>
+                  <th>Beschreibung</th>
+                  <th>Korrekter Type Hint</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="text" placeholder="Parameter loanList"></td>
+                  <td><textarea></textarea></td>
+                  <td><input type="text" placeholder="loan_list: list[LibraryMember]"></td>
+                </tr>
+                <tr>
+                  <td><input type="text"></td>
+                  <td><textarea></textarea></td>
+                  <td><input type="text"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="button-row">
+            <button class="secondary" onclick="addTableRow(this)">Weitere Zeile hinzufügen</button>
+            <button class="secondary" onclick="toggleTable(this)">Tabelle einklappen</button>
+            <button onclick="checkTableQuestion(this)">Bewerten</button>
+            <button class="secondary" onclick="toggleSolution(this)">Lösung anzeigen</button>
+          </div>
+          <div class="table-status"></div>
+          <div class="feedback"></div>
+          <div class="solution">Akzeptierte Stellen:
+- Parameter loanList / loan_list: list[LibraryMember]
+- Rückgabewert / -> int
+- Variable total / total: int = 0
+- Variable penalty / penalty: float = 0</div>
+        </div>
+
+        <div class="question text-question" data-id="typehints-vorteile" data-points="4">
+          <div class="question-title">2b) Was sind Vorteile von Type Hints? <span class="points">(4 Punkte)</span></div>
+          <textarea placeholder="Nenne vier Vorteile."></textarea>
+          <div class="button-row">
+            <button onclick="checkTextQuestion(this)">Bewerten</button>
+            <button class="secondary" onclick="toggleSolution(this)">Lösung anzeigen</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="solution">Mögliche Inhalte:
+- Früherkennung von Typfehlern
+- bessere IDE-Unterstützung / Autovervollständigung
+- selbstdokumentierender Code
+- einfacheres Refactoring
+- bessere Teamarbeit
+- weniger Laufzeitfehler</div>
+        </div>
+
+        <div class="question text-question" data-id="pyright-ruff" data-points="2">
+          <div class="question-title">2c) Unterschied zwischen Pyright und Ruff <span class="points">(2 Punkte)</span></div>
+          <textarea placeholder="Erkläre kurz den Unterschied."></textarea>
+          <div class="button-row">
+            <button onclick="checkTextQuestion(this)">Bewerten</button>
+            <button class="secondary" onclick="toggleSolution(this)">Lösung anzeigen</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="solution">Pyright prüft Type Hints und Typfehler.
+Ruff prüft Code-Stil, Linting, Formatierung und einfache Fehler wie ungenutzte Imports.</div>
+        </div>
+      </section>
+
+      <section id="a3">
+        <h2>Aufgabe 3 – Architekturschichten</h2>
+
+        <div class="question table-question" data-id="layers-table" data-points="16">
+          <div class="question-title">Code-Ausschnitte klassifizieren <span class="points">(16 Punkte)</span></div>
+          <div class="collapsed-wrap">
+            <table data-table="layers">
+              <thead>
+                <tr>
+                  <th style="width: 12%">Snippet</th>
+                  <th style="width: 25%">Schicht</th>
+                  <th>Begründung</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><input value="A"></td><td><input placeholder="Geschäftslogik"></td><td><textarea></textarea></td></tr>
+                <tr><td><input value="B"></td><td><input></td><td><textarea></textarea></td></tr>
+                <tr><td><input value="C"></td><td><input></td><td><textarea></textarea></td></tr>
+                <tr><td><input value="D"></td><td><input></td><td><textarea></textarea></td></tr>
+                <tr><td><input value="E"></td><td><input></td><td><textarea></textarea></td></tr>
+                <tr><td><input value="F"></td><td><input></td><td><textarea></textarea></td></tr>
+                <tr><td><input value="G"></td><td><input></td><td><textarea></textarea></td></tr>
+                <tr><td><input value="H"></td><td><input></td><td><textarea></textarea></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="button-row">
+            <button class="secondary" onclick="addTableRow(this)">Weitere Zeile hinzufügen</button>
+            <button class="secondary" onclick="toggleTable(this)">Tabelle einklappen</button>
+            <button onclick="checkTableQuestion(this)">Bewerten</button>
+            <button class="secondary" onclick="toggleSolution(this)">Lösung anzeigen</button>
+          </div>
+          <div class="table-status"></div>
+          <div class="feedback"></div>
+          <div class="solution">A Geschäftslogik
+B Präsentation
+C Datenzugriff
+D Geschäftslogik / Domänenmodell
+E Präsentation
+F Datenzugriff
+G Geschäftslogik
+H Präsentation
+
+Begründungen werden toleranter bewertet, wenn passende Schlüsselwörter vorkommen, z.B. SQL, Route, HTML, Validierung, Gebührenberechnung, UI-Callback.</div>
+        </div>
+      </section>
+
+      <section id="a4">
+        <h2>Aufgabe 4 – Unit-Tests, Coverage & Äquivalenzklassen</h2>
+
+        <div class="question table-question" data-id="equiv-table" data-points="4">
+          <div class="question-title">1a) Äquivalenzklassen bestimmen <span class="points">(4 Punkte)</span></div>
+          <div class="collapsed-wrap">
+            <table data-table="equiv">
+              <thead>
+                <tr>
+                  <th>Äquivalenzklasse</th>
+                  <th>Wertebereich</th>
+                  <th>Erwartete Ausgabe</th>
+                  <th>Testwert</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td><input value="ÄK1"></td><td><input></td><td><input></td><td><input></td></tr>
+                <tr><td><input value="ÄK2"></td><td><input></td><td><input></td><td><input></td></tr>
+                <tr><td><input value="ÄK3"></td><td><input></td><td><input></td><td><input></td></tr>
+                <tr><td><input value="ÄK4"></td><td><input></td><td><input></td><td><input></td></tr>
+                <tr><td><input value="ÄK5"></td><td><input></td><td><input></td><td><input></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="button-row">
+            <button class="secondary" onclick="addTableRow(this)">Weitere Zeile hinzufügen</button>
+            <button class="secondary" onclick="toggleTable(this)">Tabelle einklappen</button>
+            <button onclick="checkTableQuestion(this)">Bewerten</button>
+            <button class="secondary" onclick="toggleSolution(this)">Lösung anzeigen</button>
+          </div>
+          <div class="table-status"></div>
+          <div class="feedback"></div>
+          <div class="solution">Erwartete Klassen:
+celsius < -20 → EXTREMKALT
+-20 <= celsius < 0 → FROST
+0 <= celsius < 15 → KÜHL
+15 <= celsius < 30 → MILD
+celsius >= 30 → HEISS</div>
+        </div>
+
+        <div class="question text-question" data-id="coverage" data-points="4">
+          <div class="question-title">1b) Statement Coverage berechnen <span class="points">(4 Punkte)</span></div>
+          <textarea placeholder="Gib ausgeführte Zeilen, nicht ausgeführte Zeilen und C0 an."></textarea>
+          <div class="button-row">
+            <button onclick="checkTextQuestion(this)">Bewerten</button>
+            <button class="secondary" onclick="toggleSolution(this)">Lösung anzeigen</button>
+          </div>
+          <div class="feedback"></div>
+          <div class="solution">test_a mit 25 führt ungefähr Zeilen 3,5,7,9,10 aus.
+test_b mit -30 führt ungefähr Zeilen 3,4 aus.
+Nicht ausgeführt: Rückgaben für FROST, KÜHL, HEISS.
+Je nach Zählweise muss die Coverage sauber über ausgeführte Statements / Gesamtstatements berechnet werden.</div>
+        </div>
+      </section>
+
+      <section id="auswertung">
+        <h2>Auswertung</h2>
+        <p class="meta">Die Bewertung ist bewusst fehlertolerant. Sie ersetzt keine endgültige manuelle Korrektur, gibt aber eine brauchbare Lernrückmeldung.</p>
+        <div class="button-row">
+          <button onclick="gradeAll()">Alles bewerten</button>
+          <button class="secondary" onclick="resetAll()">Antworten zurücksetzen</button>
+        </div>
+        <div id="scoreDetails" class="summary-card">Noch keine Bewertung vorhanden.</div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    const state = {};
+
+    const answerKeys = {
+      "pep8-table": {
+        type: "tableAny",
+        maxItems: 19,
+        expected: [
+          {line:["1"], code:"F401", keywords:["logging","import","ungenutzt"]},
+          {line:["2"], code:"E401", keywords:["mehrere","imports","zeile"]},
+          {line:["2"], code:"F401", keywords:["datetime","ungenutzt","import"]},
+          {line:["2"], code:"F401", keywords:["json","ungenutzt","import"]},
+          {line:["3"], code:"F401", keywords:["path","ungenutzt","import"]},
+          {line:["4","5","6"], code:"N801", keywords:["klasse","library_member","pascal","capwords"]},
+          {line:["12"], code:"N802", keywords:["hasreachedlimit","snake","methode","funktion"]},
+          {line:["13"], code:"E701", keywords:["mehrere","anweisungen","return","zeile"]},
+          {line:["16"], code:"N802", keywords:["registerloan","snake","methode","funktion"]},
+          {line:["17"], code:"N806", keywords:["newtotal","snake","variable"]},
+          {line:["19"], code:"N806", keywords:["newtotal","snake","variable"]},
+          {line:["22","23","24"], code:"E303", keywords:["leerzeilen","zu viele","max"]},
+          {line:["25"], code:"N803", keywords:["loanlist","argument","snake"]},
+          {line:["27"], code:"F841", keywords:["penalty","ungenutzt","variable"]},
+          {line:["29"], code:"E712", keywords:["false","vergleich","not"]},
+          {line:["36"], code:"E721", keywords:["type","isinstance","vergleich"]},
+          {line:["38"], code:"E711", keywords:["none","is none","vergleich"]},
+          {line:["43"], code:"N816", keywords:["max_loans","upper","konstante"]},
+          {line:["44"], code:"N816", keywords:["default_fee","upper","konstante"]}
+        ]
+      },
+      "typehints-table": {
+        type: "tableAny",
+        maxItems: 4,
+        expected: [
+          {line:["parameter","loanlist","loan_list"], code:"", keywords:["list","librarymember","parameter","loan_list"]},
+          {line:["rückgabe","rueckgabe","return"], code:"", keywords:["int","rückgabe","return"]},
+          {line:["total"], code:"", keywords:["int","total"]},
+          {line:["penalty"], code:"", keywords:["float","penalty"]}
+        ]
+      },
+      "layers-table": {
+        type: "tableFixedRows",
+        rows: {
+          A: {layer:["geschäftslogik","geschaeftslogik"], keywords:["gebühr","gebuehr","berechnung","mahn","deckelung","domäne","domaene"]},
+          B: {layer:["präsentation","praesentation","presentation"], keywords:["route","template","render","http","anzeige"]},
+          C: {layer:["datenzugriff"], keywords:["sql","select","repository","datenbank","mapping"]},
+          D: {layer:["geschäftslogik","geschaeftslogik","domänenmodell","domaenenmodell"], keywords:["domäne","domaene","can_borrow","ausleih","regel","property"]},
+          E: {layer:["präsentation","praesentation","presentation"], keywords:["html","render","ausgabe","view","karte"]},
+          F: {layer:["datenzugriff"], keywords:["sql","insert","datenbank","speichern","persist"]},
+          G: {layer:["geschäftslogik","geschaeftslogik"], keywords:["isbn","validierung","prüfziffer","pruefziffer","regel"]},
+          H: {layer:["präsentation","praesentation","presentation"], keywords:["callback","dashboard","ui","chart","eingabe"]}
+        }
+      },
+      "equiv-table": {
+        type: "tableAny",
+        maxItems: 5,
+        expected: [
+          {line:[""], code:"EXTREMKALT", keywords:["-20","kleiner","<"]},
+          {line:[""], code:"FROST", keywords:["-20","0","<"]},
+          {line:[""], code:"KÜHL", keywords:["0","15","<"]},
+          {line:[""], code:"MILD", keywords:["15","30","<"]},
+          {line:[""], code:"HEISS", keywords:["30",">="]}
+        ]
+      },
+      "typehints-vorteile": {
+        type: "text",
+        concepts: [
+          ["früh","frueh","fehler","typfehler","pyright"],
+          ["ide","autovervollständigung","autovervollstaendigung","navigation"],
+          ["dokument","selbstdokumentierend","signatur"],
+          ["refactoring","änderung","aenderung"],
+          ["team","verständnis","verstaendnis"],
+          ["laufzeit","runtime"]
+        ]
+      },
+      "pyright-ruff": {
+        type: "text",
+        concepts: [
+          ["pyright","type","typ","type hints","typfehler"],
+          ["ruff","lint","style","pep8","format","import"]
+        ]
+      },
+      "coverage": {
+        type: "text",
+        concepts: [
+          ["25","mild","test_a"],
+          ["-30","extremkalt","test_b"],
+          ["frost","kühl","kuehl","heiss","heiß","nicht"],
+          ["coverage","c0","ausgeführt","ausgefuehrt","gesamt"]
+        ]
+      }
+    };
+
+    function normalize(s) {
+      return (s || "")
+        .toLowerCase()
+        .replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+        .replace(/[^a-z0-9_<>=.\- ]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function levenshtein(a, b) {
+      a = normalize(a); b = normalize(b);
+      if (!a || !b) return Math.max(a.length, b.length);
+      const dp = Array.from({ length: a.length + 1 }, () => Array(b.length + 1).fill(0));
+      for (let i = 0; i <= a.length; i++) dp[i][0] = i;
+      for (let j = 0; j <= b.length; j++) dp[0][j] = j;
+      for (let i = 1; i <= a.length; i++) {
+        for (let j = 1; j <= b.length; j++) {
+          const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+          dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost);
+        }
+      }
+      return dp[a.length][b.length];
+    }
+
+    function closeEnough(a, b) {
+      a = normalize(a); b = normalize(b);
+      if (!a || !b) return false;
+      if (a.includes(b) || b.includes(a)) return true;
+      const dist = levenshtein(a, b);
+      const maxLen = Math.max(a.length, b.length);
+      return dist / maxLen <= 0.25;
+    }
+
+    function containsAny(text, options) {
+      const n = normalize(text);
+      return options.some(opt => {
+        const no = normalize(opt);
+        return n.includes(no) || closeEnough(n, no);
+      });
+    }
+
+    function rowText(row) {
+      return [...row.querySelectorAll("input, textarea, select")].map(el => el.value).join(" ");
+    }
+
+    function lineMatches(input, expectedLines) {
+      const n = normalize(input);
+      if (!expectedLines || expectedLines.length === 0 || expectedLines[0] === "") return true;
+      return expectedLines.some(line => n.includes(normalize(line)));
+    }
+
+    function codeMatches(input, expectedCode) {
+      if (!expectedCode) return true;
+      return containsAny(input, [expectedCode]);
+    }
+
+    function keywordScore(text, keywords) {
+      if (!keywords || keywords.length === 0) return 1;
+      const hits = keywords.filter(k => containsAny(text, [k])).length;
+      return hits / Math.min(keywords.length, 3);
+    }
+
+    function checkTableQuestion(btn) {
+      const question = btn.closest(".question");
+      const id = question.dataset.id;
+      const points = Number(question.dataset.points);
+      const key = answerKeys[id];
+      const rows = [...question.querySelectorAll("tbody tr")];
+
+      let earned = 0;
+      let max = points;
+      let details = "";
+
+      if (key.type === "tableAny") {
+        const used = new Set();
+        let matches = 0;
+
+        rows.forEach(row => {
+          const cells = [...row.querySelectorAll("td")].map(td => td.innerText + " " + [...td.querySelectorAll("input, textarea, select")].map(el => el.value).join(" "));
+          const line = cells[0] || "";
+          const code = cells[1] || "";
+          const text = rowText(row);
+          if (!normalize(text)) return;
+
+          let bestIndex = -1;
+          let bestScore = 0;
+
+          key.expected.forEach((exp, idx) => {
+            if (used.has(idx)) return;
+            const lineOk = lineMatches(line + " " + text, exp.line);
+            const codeOk = codeMatches(code + " " + text, exp.code);
+            const kScore = keywordScore(text, exp.keywords);
+            let score = 0;
+            if (lineOk) score += 0.35;
+            if (codeOk) score += 0.45;
+            score += Math.min(kScore, 1) * 0.20;
+            if (score > bestScore) {
+              bestScore = score;
+              bestIndex = idx;
+            }
+          });
+
+          if (bestScore >= 0.62 && bestIndex >= 0) {
+            used.add(bestIndex);
+            matches += bestScore >= 0.88 ? 1 : 0.75;
+          }
+        });
+
+        const itemPoints = points / key.maxItems;
+        earned = Math.min(points, matches * itemPoints);
+        details = `${matches.toFixed(2)} von ${key.maxItems} erwarteten Einträgen erkannt.`;
+      }
+
+      if (key.type === "tableFixedRows") {
+        let rowPoints = points / Object.keys(key.rows).length;
+        let result = 0;
+
+        rows.forEach(row => {
+          const values = [...row.querySelectorAll("input, textarea, select")].map(el => el.value);
+          const snippet = normalize(values[0] || "").toUpperCase();
+          const layer = values[1] || "";
+          const reason = values.slice(2).join(" ");
+          const exp = key.rows[snippet];
+
+          if (!exp) return;
+
+          let local = 0;
+          if (containsAny(layer, exp.layer)) local += 0.5;
+          if (keywordScore(reason, exp.keywords) >= 0.34) local += 0.5;
+          result += local * rowPoints;
+        });
+
+        earned = Math.min(points, result);
+        details = `${earned.toFixed(1)} von ${points} Punkten aus Schicht + Begründung.`;
+      }
+
+      saveScore(id, earned, max);
+      setFeedback(question, earned, max, details);
+      updateScore();
+    }
+
+    function checkTextQuestion(btn) {
+      const question = btn.closest(".question");
+      const id = question.dataset.id;
+      const points = Number(question.dataset.points);
+      const key = answerKeys[id];
+      const text = question.querySelector("textarea, input").value;
+
+      let conceptHits = 0;
+      key.concepts.forEach(group => {
+        if (containsAny(text, group)) conceptHits += 1;
+      });
+
+      let earned = (conceptHits / key.concepts.length) * points;
+
+      const words = normalize(text).split(" ").filter(Boolean);
+      if (words.length < 5) earned *= 0.65;
+
+      earned = Math.min(points, earned);
+      saveScore(id, earned, points);
+      setFeedback(question, earned, points, `${conceptHits} von ${key.concepts.length} inhaltlichen Punkten erkannt.`);
+      updateScore();
+    }
+
+    function setFeedback(question, earned, max, details) {
+      const fb = question.querySelector(".feedback");
+      const pct = max ? earned / max : 0;
+      fb.className = "feedback " + (pct >= 0.8 ? "ok" : pct >= 0.45 ? "mid" : "bad");
+      fb.textContent = `Bewertung: ${earned.toFixed(1)} / ${max} Punkte. ${details}`;
+    }
+
+    function saveScore(id, earned, max) {
+      state[id] = { earned: Math.round(earned * 10) / 10, max };
+    }
+
+    function updateScore() {
+      const total = Object.values(state).reduce((s, x) => s + x.earned, 0);
+      const max = getTotalMax();
+      const pct = max ? Math.round((total / max) * 100) : 0;
+
+      document.getElementById("scoreNow").textContent = total.toFixed(1).replace(".0", "");
+      document.getElementById("scoreMax").textContent = max;
+      document.getElementById("scorePercent").textContent = pct;
+      document.getElementById("answeredCount").textContent = Object.keys(state).length;
+      document.getElementById("scoreBar").style.width = pct + "%";
+
+      const details = Object.entries(state).map(([id, v]) => `<li><strong>${id}</strong>: ${v.earned} / ${v.max} Punkte</li>`).join("");
+      document.getElementById("scoreDetails").innerHTML = details ? `<ul>${details}</ul>` : "Noch keine Bewertung vorhanden.";
+    }
+
+    function getTotalMax() {
+      return [...document.querySelectorAll(".question[data-points]")]
+        .reduce((sum, q) => sum + Number(q.dataset.points), 0);
+    }
+
+    function addTableRow(btn) {
+      const question = btn.closest(".question");
+      const tbody = question.querySelector("tbody");
+      const first = tbody.querySelector("tr");
+      const clone = first.cloneNode(true);
+      clone.querySelectorAll("input, textarea, select").forEach(el => {
+        el.value = "";
+      });
+      tbody.appendChild(clone);
+      const status = question.querySelector(".table-status");
+      status.textContent = `Zeile hinzugefügt. Aktuell ${tbody.querySelectorAll("tr").length} Zeilen.`;
+    }
+
+    function toggleTable(btn) {
+      const question = btn.closest(".question");
+      question.classList.toggle("collapsed");
+      btn.textContent = question.classList.contains("collapsed") ? "Tabelle ausklappen" : "Tabelle einklappen";
+    }
+
+    function toggleSolution(btn) {
+      const sol = btn.closest(".question").querySelector(".solution");
+      const visible = sol.style.display === "block";
+      sol.style.display = visible ? "none" : "block";
+      btn.textContent = visible ? "Lösung anzeigen" : "Lösung ausblenden";
+    }
+
+    function gradeAll() {
+      document.querySelectorAll(".table-question").forEach(q => checkTableQuestion(q.querySelector("button:not(.secondary)")));
+      document.querySelectorAll(".text-question").forEach(q => checkTextQuestion(q.querySelector("button:not(.secondary)")));
+    }
+
+    function resetAll() {
+      document.querySelectorAll("textarea, input").forEach(el => {
+        if (!["A","B","C","D","E","F","G","H","ÄK1","ÄK2","ÄK3","ÄK4","ÄK5"].includes(el.defaultValue)) {
+          el.value = el.defaultValue || "";
+        }
+      });
+      document.querySelectorAll(".feedback").forEach(el => { el.className = "feedback"; el.textContent = ""; });
+      document.querySelectorAll(".solution").forEach(el => { el.style.display = "none"; });
+      Object.keys(state).forEach(k => delete state[k]);
+      updateScore();
+    }
+
+    document.getElementById("scoreMax").textContent = getTotalMax();
+    updateScore();
+
+    const links = [...document.querySelectorAll("nav a")];
+    window.addEventListener("scroll", () => {
+      let current = "";
+      document.querySelectorAll("section").forEach(sec => {
+        if (window.scrollY >= sec.offsetTop - 140) current = sec.id;
+      });
+      links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + current));
+    });
+  </script>
+</body>
+</html>
